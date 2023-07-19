@@ -48,7 +48,7 @@ public:
 
     // m_input_cvimage->image = cv::imread("./res/img/205_182.png");
     // m_input_cvimage->image = cv::imread("./res/img/1024_768.jpeg");
-    m_input_cvimage->image = cv::imread("./res/img/1920_1080.jpg");
+    m_input_cvimage->image = cv::imread("/home/roomba/ws_ros/src/ros2_shm_msgs/res/img/1920_1080.jpg");
     m_input_cvimage->header.frame_id = "camera_link";
     m_input_cvimage->encoding = "bgr8";
     // cv::imshow("input image", m_input_cvimage->image);
@@ -57,10 +57,11 @@ public:
 
     auto publishMessage = [this]() -> void {
       m_input_cvimage->header.stamp = now();
-
+      cv::cuda::GpuMat gpu_mat;
+      gpu_mat.upload(m_input_cvimage->image);
       // no deep copy from capture to published
       // copy from cpu to gpu
-      auto msg = std::make_unique<DataType>(m_input_cvimage->image, m_input_cvimage->header, cv_cuda_stream_);
+      auto msg = std::make_unique<DataType>(gpu_mat, m_input_cvimage->header, cv_cuda_stream_);
 
       // no conversion
       // m_input_cvimage->toImageMsg(*msg);

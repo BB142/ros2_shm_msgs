@@ -103,3 +103,20 @@ target_link_libraries(gmat_image_node  ${PROJECT_NAME}_image
     ${OpenCV_LIBS}
 )
 install(TARGETS gmat_image_node DESTINATION lib/${PROJECT_NAME})
+
+add_executable(gmat_image_listener gmat_image_listener.cpp gmat_image_container.cpp)
+ament_target_dependencies(gmat_image_listener "rclcpp" "cv_bridge" "sensor_msgs")
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
+target_include_directories(gmat_image_listener PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+    "$<INSTALL_INTERFACE:include>"
+    ${CUDA_INCLUDE_DIRS}
+    ${OpenCV_INCLUDE_DIRS}
+)
+target_link_libraries(gmat_image_listener  ${PROJECT_NAME}_image
+    ${cpp_typesupport_target}
+    ${CUDA_nvToolsExt_LIBRARY}
+    ${CUDA_LIBRARIES}
+    ${OpenCV_LIBS}
+)
+install(TARGETS gmat_image_listener DESTINATION lib/${PROJECT_NAME})

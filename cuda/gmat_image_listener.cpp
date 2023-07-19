@@ -11,9 +11,9 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   rclcpp::executors::SingleThreadedExecutor executor;
 
-  auto talker = std::make_shared<Talker>();
 
-  executor.add_node(talker);
+  auto listener = std::make_shared<Listener>();
+  executor.add_node(listener);
 
 
   executor.spin();

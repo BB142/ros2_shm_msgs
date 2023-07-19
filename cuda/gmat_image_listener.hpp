@@ -52,7 +52,10 @@ public:
       RCLCPP_INFO(this->get_logger(), "container address: 0x%" PRIXPTR "", reinterpret_cast<std::uintptr_t>(m_last_container.get()));
 
       // directly process gpumat, no copy from gpu to cpu
-      m_last_container->cv_gpu_mat();
+      cv::cuda::GpuMat gpu_mat = m_last_container->cv_gpu_mat();
+      std::cout << gpu_mat.size() << std::endl;
+      cv::Mat cv_mat;
+      gpu_mat.download(cv_mat);
 
       auto time_offset_ns = (now() - m_last_container->header().stamp).nanoseconds();
       auto timestamp_offset_ns = (rclcpp::Time(m_last_container->header().stamp) - m_last_image_ts).nanoseconds();
@@ -64,8 +67,8 @@ public:
         RCLCPP_INFO(get_logger(), "get-image-timestamp_offset-time: %.3f", timestamp_offset_ms);
       }
       m_last_image_ts = m_last_container->header().stamp;
-      // cv::imshow("im show", last_cvimage->image);
-      // cv::waitKey(0);
+      cv::imshow("im show", cv_mat);
+      cv::waitKey(1);
     };
 
     // rclcpp::QoS qos(rclcpp::KeepLast(10));

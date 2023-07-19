@@ -74,7 +74,7 @@ public:
 
   /// copy the given cv::Mat into this class.
   ROSGpuMatContainer(
-    const cv::Mat & mat_frame,
+    const cv::cuda::GpuMat & mat_frame,
     const std_msgs::msg::Header & header,
     std::shared_ptr<cv::cuda::Stream> cv_cuda_stream);
 
